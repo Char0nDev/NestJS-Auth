@@ -10,33 +10,31 @@ import { LoggingMiddleware } from './middleware/logging.middleware';
 @Module({
   imports: [
     JwtModule.registerAsync({
-      imports : [ConfigModule],
-      useFactory : async (configService : ConfigService) => ({
-        secret : configService.get<string>('JWT_SECRET')
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
       }),
-      global : true,
-      inject : [ConfigService]
+      global: true,
+      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      cache: true
+      cache: true,
     }),
     MongooseModule.forRootAsync({
-      imports : [ConfigModule], 
-      useFactory: async (configService : ConfigService) => ({
-        uri : configService.get<string>('MONGODB_URI')
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
       }),
-      inject : [ConfigService]
+      inject: [ConfigService],
     }),
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggingMiddleware)
-      .forRoutes('*')
+    consumer.apply(LoggingMiddleware).forRoutes('*');
   }
 }
